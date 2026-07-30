@@ -9,8 +9,8 @@ const offerings = await getOfferings();
 	title="Offerings"
 	description="Somatic coaching, Sohum Breathing, sound healing, resonant branding, and psychedelic somatic integration."
 >
-	<section class="page-hero section">
-		<div class="wrap wrap--narrow">
+	<section class="page-hero section section--tight">
+		<div class="wrap wrap--narrow reveal">
 			<p class="eyebrow">Offerings</p>
 			<h1>Come home to yourself</h1>
 			<p class="lede">
@@ -28,8 +28,11 @@ const offerings = await getOfferings();
 						id={offering.slug}
 						class:list={['offering', 'reveal', i % 2 === 1 ? 'reveal-delay-1' : undefined]}
 					>
-						<h2>{offering.title}</h2>
-						<p>{offering.body}</p>
+						<span class="offering__index">{String(i + 1).padStart(2, '0')}</span>
+						<div>
+							<h2>{offering.title}</h2>
+							<p>{offering.body}</p>
+						</div>
 					</article>
 				))
 			}
@@ -42,30 +45,43 @@ const offerings = await getOfferings();
 </BaseLayout>
 
 <style>
-	.page-hero {
-		padding-bottom: var(--space-md);
-	}
-
 	.page-hero h1 {
 		margin: 0 0 1rem;
 	}
 
 	.offerings {
-		padding-top: 0;
+		padding-top: var(--space-md);
 	}
 
 	.offering {
+		display: grid;
+		gap: 1rem;
 		padding-block: var(--space-lg);
-		border-top: 1px solid rgba(47, 74, 64, 0.14);
-		max-width: 42rem;
+		border-top: 1px solid rgba(18, 24, 22, 0.12);
+		max-width: 46rem;
+	}
+
+	@media (min-width: 640px) {
+		.offering {
+			grid-template-columns: 3.5rem 1fr;
+			gap: 1.5rem;
+		}
 	}
 
 	.offering:last-of-type {
-		border-bottom: 1px solid rgba(47, 74, 64, 0.14);
+		border-bottom: 1px solid rgba(18, 24, 22, 0.12);
+	}
+
+	.offering__index {
+		font-family: var(--font-display);
+		font-style: italic;
+		font-size: 1.15rem;
+		color: var(--color-sage);
+		padding-top: 0.35rem;
 	}
 
 	.offering h2 {
-		margin: 0 0 0.75rem;
+		margin: 0 0 0.85rem;
 	}
 
 	.offering p {

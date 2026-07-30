@@ -6,8 +6,8 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 	title="Sanctuary"
 	description="One Tree Cottage — a sanctuary for workshops and retreats in North Lake Tahoe."
 >
-	<section class="page-hero section">
-		<div class="wrap wrap--narrow">
+	<section class="page-hero section section--tight">
+		<div class="wrap wrap--narrow reveal">
 			<p class="eyebrow">Sanctuary</p>
 			<h1>One Tree Cottage</h1>
 			<p class="lede italic-accent">Sanctuary for the soul</p>
@@ -83,13 +83,13 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
 	.gallery-grid img {
 		width: 100%;
-		aspect-ratio: 4 / 5;
+		aspect-ratio: 3 / 4;
 		object-fit: cover;
 	}
 
 	.inquire {
 		text-align: center;
-		background: rgba(255, 255, 255, 0.4);
+		background: var(--color-wash);
 	}
 
 	.inquire h2 {
