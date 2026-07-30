@@ -191,7 +191,7 @@ export const site = {
 ## Feature checklist
 
 ### Phase 0 — Foundation ← current
-- [ ] Init Astro + TypeScript + Cloudflare adapter
+- [x] Init Astro + TypeScript + Cloudflare adapter
 - [ ] Design tokens (colors, type, spacing)
 - [ ] Layout, nav, footer, scroll motion
 - [ ] Wire `site` params + `.env.example`
@@ -238,6 +238,7 @@ export const site = {
 | 2026-07-30 | Assets + `reference/` HTML captured from Squarespace |
 | 2026-07-30 | Locked **Astro**; dual CMS (Notion + Git); **Resend** for forms; **MailerLite** preferred for newsletter; **events v1 = email register** (Stripe later) |
 | 2026-07-30 | Cloudflare Pages settings for this stack: build `npm run build`, output `dist` |
+| 2026-07-30 | Astro scaffolded at repo root + `@astrojs/cloudflare` adapter |
 
 ---
 
