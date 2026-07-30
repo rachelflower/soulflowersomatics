@@ -1,0 +1,180 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { formatEventDate, getEvents, upcomingFrom } from '../../lib/content/events';
+
+const events = await getEvents();
+const upcoming = upcomingFrom(events);
+const past = events
+	.filter((e) => !upcoming.some((u) => u.slug === e.slug))
+	.sort((a, b) => b.date.localeCompare(a.date));
+---
+
+<BaseLayout
+	title="Gatherings"
+	description="Community events and retreats — breathwork, somadance, sound, and ceremony in North Lake Tahoe."
+>
+	<section class="page-hero section">
+		<div class="wrap">
+			<p class="eyebrow">Workshops and gatherings</p>
+			<h1>Community events &amp; retreats</h1>
+			<p class="lede">
+				Throughout the year, I host immersive workshops, retreats, and ceremonies — spaces to step
+				out of ordinary time and into profound connection. These gatherings weave ritual, movement,
+				breath, and sound to create community and transformation.
+			</p>
+			<ul class="expect">
+				<li>Weekly Breathwork Circles</li>
+				<li>Somatic &amp; Sound Immersions</li>
+				<li>Seasonal Retreats (nature-based, ritual-infused)</li>
+			</ul>
+		</div>
+	</section>
+
+	<section class="section calendar">
+		<div class="wrap">
+			<h2 class="reveal">Upcoming</h2>
+			{
+				upcoming.length === 0 ? (
+					<p class="reveal">No upcoming gatherings posted yet — check back soon, or reach out.</p>
+				) : (
+					<ul class="event-list">
+						{upcoming.map((event, i) => (
+							<li id={event.slug} class:list={['event', 'reveal', `reveal-delay-${Math.min(i, 2)}`]}>
+								{event.image && (
+									<img src={event.image} alt="" width="720" height="480" loading="lazy" />
+								)}
+								<div>
+									<p class="event__date">{formatEventDate(event.date)}</p>
+									<h3>{event.title}</h3>
+									<p class="event__meta">
+										{[event.time, event.venue].filter(Boolean).join(' · ')}
+									</p>
+									{event.summary && <p>{event.summary}</p>}
+									<a class="btn btn--outline" href={`/gatherings/${event.slug}`}>
+										Register by email →
+									</a>
+								</div>
+							</li>
+						))}
+					</ul>
+				)
+			}
+
+			{
+				past.length > 0 && (
+					<>
+						<h2 class="past-heading reveal">Recently held</h2>
+						<ul class="past-list reveal">
+							{past.map((event) => (
+								<li>
+									<strong>{event.title}</strong>
+									<span>
+										{formatEventDate(event.date)}
+										{event.venue ? ` · ${event.venue}` : ''}
+									</span>
+								</li>
+							))}
+						</ul>
+					</>
+				)
+			}
+		</div>
+	</section>
+</BaseLayout>
+
+<style>
+	.page-hero h1 {
+		margin: 0 0 1rem;
+	}
+
+	.expect {
+		margin: 1.25rem 0 0;
+		padding-left: 1.2rem;
+		color: var(--color-ink-soft);
+	}
+
+	.calendar {
+		padding-top: 0;
+	}
+
+	.calendar h2 {
+		margin: 0 0 var(--space-md);
+	}
+
+	.event-list {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: grid;
+		gap: var(--space-xl);
+	}
+
+	.event {
+		display: grid;
+		gap: 1.25rem;
+		padding-bottom: var(--space-lg);
+		border-bottom: 1px solid rgba(47, 74, 64, 0.12);
+	}
+
+	@media (min-width: 720px) {
+		.event {
+			grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+			gap: 2rem;
+			align-items: start;
+		}
+	}
+
+	.event img {
+		width: 100%;
+		aspect-ratio: 4 / 3;
+		object-fit: cover;
+	}
+
+	.event h3 {
+		margin: 0.25rem 0 0.5rem;
+	}
+
+	.event__date {
+		margin: 0;
+		font-size: 0.85rem;
+		font-weight: 600;
+		letter-spacing: 0.04em;
+		text-transform: uppercase;
+		color: var(--color-sage-deep);
+	}
+
+	.event__meta {
+		margin: 0 0 0.75rem;
+		color: var(--color-ink-soft);
+	}
+
+	.event .btn {
+		margin-top: 0.75rem;
+	}
+
+	.past-heading {
+		margin-top: var(--space-xl);
+	}
+
+	.past-list {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: grid;
+		gap: 0.75rem;
+	}
+
+	.past-list li {
+		display: grid;
+		gap: 0.15rem;
+		padding-block: 0.75rem;
+		border-bottom: 1px solid rgba(47, 74, 64, 0.1);
+		color: var(--color-ink-soft);
+		font-size: 0.95rem;
+	}
+
+	.past-list strong {
+		color: var(--color-ink);
+		font-weight: 600;
+	}
+</style>

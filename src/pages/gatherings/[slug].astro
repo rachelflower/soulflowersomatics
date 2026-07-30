@@ -1,0 +1,203 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { formatEventDate, getEvents } from '../../lib/content/events';
+
+export async function getStaticPaths() {
+	const events = await getEvents();
+	return events.map((event) => ({
+		params: { slug: event.slug },
+		props: { event },
+	}));
+}
+
+const { event } = Astro.props;
+---
+
+<BaseLayout
+	title={event.title}
+	description={event.summary ?? `${event.title} — ${formatEventDate(event.date)}`}
+>
+	<section class="section">
+		<div class="wrap wrap--narrow">
+			<p class="eyebrow">
+				<a href="/gatherings">Gatherings</a>
+			</p>
+			<h1>{event.title}</h1>
+			<p class="meta">
+				{formatEventDate(event.date)}
+				{event.time ? ` · ${event.time}` : ''}
+				{event.venue ? ` · ${event.venue}` : ''}
+			</p>
+			{
+				event.image && (
+					<img class="poster" src={event.image} alt="" width="900" height="600" loading="eager" />
+				)
+			}
+			{event.summary && <p class="summary">{event.summary}</p>}
+
+			<form class="register" id="register-form" data-event-title={event.title} data-event-slug={event.slug}>
+				<h2>Register by email</h2>
+				<p class="lede">
+					Send your details and I’ll follow up with confirmation and prep notes. No payment on this
+					site yet.
+				</p>
+				<label>
+					Name
+					<input name="name" type="text" required maxlength="120" autocomplete="name" />
+				</label>
+				<label>
+					Email
+					<input name="email" type="email" required maxlength="254" autocomplete="email" />
+				</label>
+				<label>
+					Guests
+					<input name="guests" type="number" min="1" max="20" value="1" />
+				</label>
+				<label>
+					Notes <span class="optional">(optional)</span>
+					<textarea name="notes" rows="4" maxlength="2000"></textarea>
+				</label>
+				{/* honeypot */}
+				<label class="hp" aria-hidden="true">
+					Website
+					<input name="website" type="text" tabindex="-1" autocomplete="off" />
+				</label>
+				<button class="btn btn--primary" type="submit">Request a spot</button>
+				<p class="form-status" role="status" aria-live="polite" hidden></p>
+			</form>
+		</div>
+	</section>
+</BaseLayout>
+
+<style>
+	.eyebrow a {
+		text-decoration: none;
+	}
+
+	h1 {
+		margin: 0 0 0.75rem;
+	}
+
+	.meta {
+		color: var(--color-ink-soft);
+		margin: 0 0 1.5rem;
+	}
+
+	.poster {
+		width: 100%;
+		aspect-ratio: 3 / 2;
+		object-fit: cover;
+		margin-bottom: 1.5rem;
+	}
+
+	.summary {
+		font-size: 1.1rem;
+		color: var(--color-ink-soft);
+		margin-bottom: 2rem;
+	}
+
+	.register {
+		display: grid;
+		gap: 1rem;
+		padding-top: var(--space-lg);
+		border-top: 1px solid rgba(47, 74, 64, 0.12);
+	}
+
+	.register h2 {
+		margin: 0;
+	}
+
+	.register label {
+		display: grid;
+		gap: 0.35rem;
+		font-weight: 600;
+		font-size: 0.9rem;
+	}
+
+	.optional {
+		font-weight: 400;
+		color: var(--color-ink-soft);
+	}
+
+	.register input,
+	.register textarea {
+		font: inherit;
+		font-weight: 400;
+		padding: 0.75rem 0.85rem;
+		border: 1px solid rgba(47, 74, 64, 0.25);
+		background: rgba(255, 255, 255, 0.7);
+		color: var(--color-ink);
+	}
+
+	.register input:focus,
+	.register textarea:focus {
+		outline: 2px solid var(--color-sage);
+		outline-offset: 1px;
+	}
+
+	.hp {
+		position: absolute;
+		left: -9999px;
+		opacity: 0;
+		height: 0;
+		overflow: hidden;
+	}
+
+	.form-status {
+		margin: 0;
+		font-weight: 600;
+	}
+
+	.form-status[data-state='ok'] {
+		color: var(--color-sage-deep);
+	}
+
+	.form-status[data-state='error'] {
+		color: #8a3a2a;
+	}
+</style>
+
+<script>
+	const form = document.getElementById('register-form') as HTMLFormElement | null;
+	const status = form?.querySelector('.form-status') as HTMLElement | null;
+
+	form?.addEventListener('submit', async (event) => {
+		event.preventDefault();
+		if (!form || !status) return;
+
+		const data = new FormData(form);
+		const payload = {
+			name: String(data.get('name') ?? ''),
+			email: String(data.get('email') ?? ''),
+			guests: Number(data.get('guests') ?? 1),
+			notes: String(data.get('notes') ?? ''),
+			website: String(data.get('website') ?? ''),
+			eventTitle: form.dataset.eventTitle ?? '',
+			eventSlug: form.dataset.eventSlug ?? '',
+		};
+
+		status.hidden = false;
+		status.dataset.state = '';
+		status.textContent = 'Sending…';
+
+		try {
+			const res = await fetch('/api/register', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify(payload),
+			});
+			const json = (await res.json()) as { ok?: boolean; error?: string };
+			if (!res.ok || !json.ok) {
+				status.dataset.state = 'error';
+				status.textContent = json.error ?? 'Something went wrong. Please try again.';
+				return;
+			}
+			status.dataset.state = 'ok';
+			status.textContent = 'Thank you — I’ll be in touch soon.';
+			form.reset();
+		} catch {
+			status.dataset.state = 'error';
+			status.textContent = 'Unable to send right now. Please try again later.';
+		}
+	});
+</script>

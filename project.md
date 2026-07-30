@@ -17,7 +17,7 @@ Last updated: 2026-07-30 (session: stack + CMS + forms/events phasing)
 | Hosting | Cloudflare Pages (+ Functions/Workers as needed) |
 | Code | GitHub (this repo) |
 | Launch | Build & deploy on Cloudflare first; point production domain later |
-| Editing model | **Both:** Notion CMS (non-dev / dashboard edits) **and** Markdown/Git in-repo (Cursor + small local edits) |
+| Editing model | **Decap CMS** (browser editor at `/admin/`) + Markdown/Git in-repo (Cursor). Notion deferred. |
 | Contact form | **Resend** → `rachelinflower@gmail.com` (not Formspree) |
 | Newsletter | Prefer **MailerLite** if we can wire signup from the site; otherwise Resend Audiences. Migrate existing MailerLite list if needed |
 | Events (v1) | **Email to register only** — no Stripe checkout yet (see Phase 2a) |
@@ -100,14 +100,17 @@ dist/               # Build output (Cloudflare output directory)
 project.md          # This plan
 ```
 
-### CMS: Notion + Git
-- **Notion databases:** Events, Blog Posts, FAQ, Testimonials, Products (optional), Site Settings.
-- **Git Markdown:** same types under `/content` for Cursor edits and offline work.
-- Sync strategy (phase 2): Notion as production source of truth; repo Markdown for local/dev and agent edits. Exact sync direction to confirm when wiring CMS.
+### CMS: Decap + Git Markdown
+- **Decap CMS** at `/admin/` — browser UI that commits Markdown to GitHub.
+- **Content folders:** `src/content/events/`, `src/content/offerings/` (Astro content collections).
+- **Local editing:** `npm run cms` (port 8081) + `npm run dev`, then open http://localhost:4321/admin/
+- **Production login:** GitHub OAuth via `/auth` + `/callback` on this site (Cloudflare secrets: `GITHUB_OAUTH_CLIENT_ID`, `GITHUB_OAUTH_CLIENT_SECRET`).
+- **GitHub OAuth App:** Homepage = site URL; Authorization callback URL = `https://<your-domain>/callback`. Update `base_url` in `public/admin/config.yml` to match the live origin (pages.dev or custom domain).
+- Notion sync: deferred; Decap covers non-dev dashboard edits for now.
 
 ### Why Astro + Cloudflare
 - Marketing + content site; Astro ships little JS; static + islands.
-- Pages Functions cover forms, later Stripe, Notion fetch.
+- Pages Functions cover forms, later Stripe, Decap OAuth.
 - Grows page-by-page without a heavy app framework.
 
 ---
@@ -194,7 +197,8 @@ export const site = {
 - [x] Init Astro + TypeScript + Cloudflare adapter
 - [ ] Design tokens (colors, type, spacing)
 - [ ] Layout, nav, footer, scroll motion
-- [ ] Wire `site` params + `.env.example`
+- [x] Wire `site` params + `.env.example` / `.dev.vars.example`
+- [x] Resend client + `/api/contact` + `/api/register` (forms UI later)
 - [ ] Deploy shell to Cloudflare Pages (`npm run build` → `dist`)
 
 ### Phase 1 — Core pages + contact
@@ -238,6 +242,7 @@ export const site = {
 | 2026-07-30 | Assets + `reference/` HTML captured from Squarespace |
 | 2026-07-30 | Locked **Astro**; dual CMS (Notion + Git); **Resend** for forms; **MailerLite** preferred for newsletter; **events v1 = email register** (Stripe later) |
 | 2026-07-30 | Cloudflare Pages settings for this stack: build `npm run build`, output `dist` |
+| 2026-07-30 | Resend tooling: `resend` SDK, site config, `/api/contact` + `/api/register`, `.dev.vars` / `.env.example` |
 | 2026-07-30 | Astro scaffolded at repo root + `@astrojs/cloudflare` adapter |
 
 ---
@@ -259,7 +264,7 @@ export const site = {
 |---------|---------|--------|
 | GitHub | Code | This repo |
 | Cloudflare | Host + Turnstile + DNS later | Needed |
-| Resend | Contact + event-register emails (+ optional newsletter) | Needed — guided setup |
+| Resend | Contact + event-register emails (+ optional newsletter) | API key ready — local `.dev.vars`; Cloudflare secrets later |
 | MailerLite | Newsletter list / signup | Preferred if we keep current list |
 | Notion | CMS databases | Needed — integration token |
 | Stripe | Checkout — **Phase 2b** | Deferred |

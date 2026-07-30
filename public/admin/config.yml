@@ -1,0 +1,70 @@
+# Decap CMS — edit content at /admin/
+# Local: run `npm run cms` + `npm run dev`, then open http://localhost:4321/admin/
+# Production: GitHub login (requires OAuth app + secrets — see project.md)
+
+backend:
+  name: github
+  repo: rachelflower/soulflowersomatics
+  branch: main
+  base_url: https://www.soulflowersomatics.com
+  # Until custom domain is live on Cloudflare, use your *.pages.dev origin as base_url
+  # and set the GitHub OAuth callback to that same origin + /callback
+
+# When developing on localhost with `npm run cms` (decap-server), skip GitHub auth
+local_backend: true
+
+media_folder: public/images
+public_folder: /images
+
+collections:
+  - name: events
+    label: Gatherings
+    label_singular: Gathering
+    folder: src/content/events
+    create: true
+    delete: true
+    slug: '{{slug}}'
+    extension: md
+    format: frontmatter
+    fields:
+      - { label: Title, name: title, widget: string }
+      - {
+          label: Date,
+          name: date,
+          widget: datetime,
+          date_format: YYYY-MM-DD,
+          time_format: false,
+          format: YYYY-MM-DD,
+        }
+      - { label: Time, name: time, widget: string, required: false, hint: 'e.g. 6:00–8:00 PM' }
+      - { label: Venue, name: venue, widget: string }
+      - { label: Image, name: image, widget: image, required: false }
+      - { label: Summary, name: summary, widget: text, required: false }
+
+  - name: offerings
+    label: Offerings
+    label_singular: Offering
+    folder: src/content/offerings
+    create: true
+    delete: true
+    slug: '{{slug}}'
+    extension: md
+    format: frontmatter
+    fields:
+      - { label: Title, name: title, widget: string }
+      - { label: Teaser, name: teaser, widget: text, hint: 'Short blurb for home / cards' }
+      - { label: Body, name: body, widget: text }
+      - {
+          label: Show on home,
+          name: featuredOnHome,
+          widget: boolean,
+          default: false,
+        }
+      - {
+          label: Sort order,
+          name: order,
+          widget: number,
+          value_type: int,
+          default: 100,
+          hint: 'Lower numbers appear first',
+        }

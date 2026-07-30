@@ -1,0 +1,13 @@
+# Cloudflare Workers local secrets (used by `astro dev` with @astrojs/cloudflare)
+# Copy from `.env.example` and paste your real Resend API key.
+
+RESEND_API_KEY=re_xxxxxxxx
+
+# Optional overrides (defaults in src/config/site.ts)
+# CONTACT_TO_EMAIL=rachelinflower@gmail.com
+# CONTACT_FROM_EMAIL=Soul Flower Somatics <onboarding@resend.dev>
+
+# Decap CMS — only needed for production GitHub login (local uses `npm run cms`)
+# GITHUB_OAUTH_CLIENT_ID=
+# GITHUB_OAUTH_CLIENT_SECRET=
+# GITHUB_REPO_PRIVATE=1

@@ -1,0 +1,145 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+	title="Contact"
+	description="Get in touch to book a session, ask about a gathering, or simply connect."
+>
+	<section class="page-hero section">
+		<div class="wrap wrap--narrow">
+			<p class="eyebrow">Contact</p>
+			<h1>Let’s talk</h1>
+			<p class="lede">
+				I would love to hear from you. Whether you are ready to book a session, curious about an
+				upcoming retreat, or simply feeling the call to connect, you are welcome here.
+			</p>
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="wrap wrap--narrow">
+			<form class="contact" id="contact-form">
+				<label>
+					Name
+					<input name="name" type="text" required maxlength="120" autocomplete="name" />
+				</label>
+				<label>
+					Email
+					<input name="email" type="email" required maxlength="254" autocomplete="email" />
+				</label>
+				<label>
+					Message
+					<textarea name="message" rows="6" required maxlength="5000"></textarea>
+				</label>
+				<label class="hp" aria-hidden="true">
+					Website
+					<input name="website" type="text" tabindex="-1" autocomplete="off" />
+				</label>
+				<button class="btn btn--primary" type="submit">Send message</button>
+				<p class="form-status" role="status" aria-live="polite" hidden></p>
+			</form>
+		</div>
+	</section>
+</BaseLayout>
+
+<style>
+	.page-hero {
+		padding-bottom: var(--space-md);
+	}
+
+	.page-hero h1 {
+		margin: 0 0 1rem;
+	}
+
+	.contact {
+		display: grid;
+		gap: 1rem;
+	}
+
+	.contact label {
+		display: grid;
+		gap: 0.35rem;
+		font-weight: 600;
+		font-size: 0.9rem;
+	}
+
+	.contact input,
+	.contact textarea {
+		font: inherit;
+		font-weight: 400;
+		padding: 0.75rem 0.85rem;
+		border: 1px solid rgba(47, 74, 64, 0.25);
+		background: rgba(255, 255, 255, 0.7);
+		color: var(--color-ink);
+	}
+
+	.contact input:focus,
+	.contact textarea:focus {
+		outline: 2px solid var(--color-sage);
+		outline-offset: 1px;
+	}
+
+	.hp {
+		position: absolute;
+		left: -9999px;
+		opacity: 0;
+		height: 0;
+		overflow: hidden;
+	}
+
+	.form-status {
+		margin: 0;
+		font-weight: 600;
+	}
+
+	.form-status[data-state='ok'] {
+		color: var(--color-sage-deep);
+	}
+
+	.form-status[data-state='error'] {
+		color: #8a3a2a;
+	}
+</style>
+
+<script>
+	const form = document.getElementById('contact-form') as HTMLFormElement | null;
+	const status = form?.querySelector('.form-status') as HTMLElement | null;
+
+	form?.addEventListener('submit', async (event) => {
+		event.preventDefault();
+		if (!form || !status) return;
+
+		const data = new FormData(form);
+		const payload = {
+			name: String(data.get('name') ?? ''),
+			email: String(data.get('email') ?? ''),
+			message: String(data.get('message') ?? ''),
+			website: String(data.get('website') ?? ''),
+		};
+
+		status.hidden = false;
+		status.dataset.state = '';
+		status.textContent = 'Sending…';
+
+		try {
+			const res = await fetch('/api/contact', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify(payload),
+			});
+			const json = (await res.json()) as { ok?: boolean; error?: string };
+			if (!res.ok || !json.ok) {
+				status.dataset.state = 'error';
+				status.textContent = json.error ?? 'Something went wrong. Please try again.';
+				return;
+			}
+			status.dataset.state = 'ok';
+			status.textContent = 'Thank you — your message is on its way.';
+			form.reset();
+		} catch {
+			status.dataset.state = 'error';
+			status.textContent = 'Unable to send right now. Please try again later.';
+		}
+	});
+</script>

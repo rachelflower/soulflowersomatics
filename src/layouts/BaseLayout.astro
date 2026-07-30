@@ -1,0 +1,355 @@
+---
+import { site } from '../config/site';
+import { footerLinks, navLinks } from '../config/nav';
+import '../styles/global.css';
+
+interface Props {
+	title?: string;
+	description?: string;
+	/** Transparent nav over full-bleed hero */
+	transparentNav?: boolean;
+}
+
+const {
+	title = site.name,
+	description = 'Restoration, resonance, and deep remembering — somatic coaching, breathwork, sound healing, and gatherings in North Lake Tahoe.',
+	transparentNav = false,
+} = Astro.props;
+
+const pageTitle = title === site.name ? title : `${title} — ${site.name}`;
+const pathname = Astro.url.pathname.replace(/\/$/, '') || '/';
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<link rel="icon" href="/favicon.gif" type="image/gif" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="generator" content={Astro.generator} />
+		<meta name="description" content={description} />
+		<link rel="canonical" href={new URL(Astro.url.pathname, site.url).href} />
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Open+Sans:wght@400;600;700&display=swap"
+			rel="stylesheet"
+		/>
+		<title>{pageTitle}</title>
+	</head>
+	<body data-nav={transparentNav ? 'transparent' : 'solid'}>
+		<a class="skip-link" href="#main">Skip to content</a>
+
+		<header class:list={['site-header', { 'site-header--transparent': transparentNav }]}>
+			<div class="site-header__inner wrap">
+				<a class="site-header__brand" href="/" aria-label={site.name}>
+					<img
+						src="/images/SoulFlowerSomatics_HorizontalLogoBlack.webp"
+						alt={site.name}
+						width="220"
+						height="48"
+						class="site-header__logo site-header__logo--dark"
+					/>
+					<span class="site-header__wordmark">{site.name}</span>
+				</a>
+
+				<button
+					type="button"
+					class="site-header__toggle"
+					aria-expanded="false"
+					aria-controls="site-nav"
+					data-nav-toggle
+				>
+					<span class="sr-only">Menu</span>
+					<span aria-hidden="true"></span>
+					<span aria-hidden="true"></span>
+				</button>
+
+				<nav id="site-nav" class="site-nav" aria-label="Primary">
+					<ul>
+						{
+							navLinks.map((link) => {
+								const href = link.href.replace(/\/$/, '') || '/';
+								const active = pathname === href;
+								return (
+									<li>
+										<a href={link.href} aria-current={active ? 'page' : undefined}>
+											{link.label}
+										</a>
+									</li>
+								);
+							})
+						}
+					</ul>
+				</nav>
+			</div>
+		</header>
+
+		<main id="main">
+			<slot />
+		</main>
+
+		<footer class="site-footer">
+			<div class="wrap site-footer__inner">
+				<div class="site-footer__brand">
+					<p class="site-footer__name">{site.name}</p>
+					<p class="site-footer__tag">Remember why you came here.</p>
+				</div>
+				<nav class="site-footer__nav" aria-label="Footer">
+					<ul>
+						{footerLinks.map((link) => (
+							<li>
+								<a href={link.href}>{link.label}</a>
+							</li>
+						))}
+					</ul>
+				</nav>
+				<p class="site-footer__meta">
+					<a href="https://account.venmo.com/u/Rachel-Flower" rel="noopener noreferrer" target="_blank">
+						Pay with Venmo
+					</a>
+				</p>
+			</div>
+		</footer>
+
+		<style>
+			.skip-link {
+				position: absolute;
+				left: 1rem;
+				top: -100px;
+				z-index: 100;
+				padding: 0.75rem 1rem;
+				background: var(--color-moss);
+				color: white;
+				text-decoration: none;
+			}
+
+			.skip-link:focus {
+				top: 1rem;
+			}
+
+			.site-header {
+				position: sticky;
+				top: 0;
+				z-index: 50;
+				height: var(--nav-height);
+				background: rgba(244, 247, 245, 0.92);
+				backdrop-filter: blur(10px);
+				border-bottom: 1px solid rgba(47, 74, 64, 0.08);
+			}
+
+			.site-header--transparent {
+				position: absolute;
+				inset-inline: 0;
+				background: transparent;
+				border-bottom: none;
+				backdrop-filter: none;
+			}
+
+			.site-header--transparent .site-header__logo--dark {
+				filter: brightness(0) invert(1);
+			}
+
+			.site-header--transparent .site-nav a,
+			.site-header--transparent .site-header__wordmark,
+			.site-header--transparent .site-header__toggle span {
+				color: var(--color-white);
+			}
+
+			.site-header--transparent .site-header__toggle span {
+				background: var(--color-white);
+			}
+
+			.site-header__inner {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				height: 100%;
+				gap: 1rem;
+			}
+
+			.site-header__brand {
+				display: flex;
+				align-items: center;
+				text-decoration: none;
+				flex-shrink: 0;
+			}
+
+			.site-header__logo {
+				height: 2.25rem;
+				width: auto;
+			}
+
+			.site-header__wordmark {
+				display: none;
+				font-family: var(--font-display);
+				font-size: 1.05rem;
+				color: var(--color-ink);
+			}
+
+			.site-header__toggle {
+				display: none;
+				width: 2.5rem;
+				height: 2.5rem;
+				border: 0;
+				background: transparent;
+				padding: 0.5rem;
+				cursor: pointer;
+			}
+
+			.site-header__toggle span {
+				display: block;
+				height: 2px;
+				margin: 6px 0;
+				background: var(--color-ink);
+				transition: transform 0.25s var(--ease-out);
+			}
+
+			.site-nav ul {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 0.15rem 1.35rem;
+				list-style: none;
+				margin: 0;
+				padding: 0;
+			}
+
+			.site-nav a {
+				font-size: 0.9rem;
+				font-weight: 600;
+				letter-spacing: 0.02em;
+				text-decoration: none;
+				color: var(--color-ink-soft);
+			}
+
+			.site-nav a:hover,
+			.site-nav a[aria-current='page'] {
+				color: var(--color-moss);
+			}
+
+			.site-header--transparent .site-nav a:hover,
+			.site-header--transparent .site-nav a[aria-current='page'] {
+				color: var(--color-sage);
+			}
+
+			.site-footer {
+				padding-block: var(--space-xl);
+				border-top: 1px solid rgba(47, 74, 64, 0.12);
+				background: rgba(255, 255, 255, 0.35);
+			}
+
+			.site-footer__inner {
+				display: grid;
+				gap: var(--space-md);
+				text-align: center;
+				justify-items: center;
+			}
+
+			.site-footer__name {
+				font-family: var(--font-display);
+				font-size: 1.25rem;
+				margin: 0 0 0.35rem;
+			}
+
+			.site-footer__tag {
+				margin: 0;
+				font-style: italic;
+				color: var(--color-sage-deep);
+			}
+
+			.site-footer__nav ul {
+				display: flex;
+				flex-wrap: wrap;
+				justify-content: center;
+				gap: 0.75rem 1.5rem;
+				list-style: none;
+				margin: 0;
+				padding: 0;
+			}
+
+			.site-footer__nav a,
+			.site-footer__meta a {
+				text-decoration: none;
+				font-weight: 600;
+				color: var(--color-ink-soft);
+			}
+
+			.site-footer__nav a:hover,
+			.site-footer__meta a:hover {
+				color: var(--color-moss);
+			}
+
+			.site-footer__meta {
+				margin: 0;
+				font-size: 0.9rem;
+			}
+
+			@media (max-width: 860px) {
+				.site-header__toggle {
+					display: block;
+					z-index: 2;
+				}
+
+				.site-nav {
+					position: fixed;
+					inset: 0;
+					background: rgba(26, 36, 32, 0.96);
+					padding: calc(var(--nav-height) + 1rem) 1.5rem 2rem;
+					opacity: 0;
+					visibility: hidden;
+					transition:
+						opacity 0.3s var(--ease-out),
+						visibility 0.3s;
+				}
+
+				.site-nav.is-open {
+					opacity: 1;
+					visibility: visible;
+				}
+
+				.site-nav ul {
+					flex-direction: column;
+					gap: 1.25rem;
+				}
+
+				.site-nav a {
+					font-size: 1.35rem;
+					color: var(--color-white) !important;
+				}
+
+				body.nav-open {
+					overflow: hidden;
+				}
+			}
+		</style>
+
+		<script>
+			const toggle = document.querySelector('[data-nav-toggle]');
+			const nav = document.getElementById('site-nav');
+			toggle?.addEventListener('click', () => {
+				const open = nav?.classList.toggle('is-open');
+				toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+				document.body.classList.toggle('nav-open', Boolean(open));
+			});
+
+			const reveals = document.querySelectorAll('.reveal');
+			if (reveals.length && 'IntersectionObserver' in window) {
+				const io = new IntersectionObserver(
+					(entries) => {
+						for (const entry of entries) {
+							if (entry.isIntersecting) {
+								entry.target.classList.add('is-visible');
+								io.unobserve(entry.target);
+							}
+						}
+					},
+					{ threshold: 0.15, rootMargin: '0px 0px -8% 0px' },
+				);
+				reveals.forEach((el) => io.observe(el));
+			} else {
+				reveals.forEach((el) => el.classList.add('is-visible'));
+			}
+		</script>
+	</body>
+</html>

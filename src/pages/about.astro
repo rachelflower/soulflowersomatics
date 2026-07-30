@@ -1,0 +1,104 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+	title="About"
+	description="Rachel Flower — somatic practitioner, breathwork facilitator, and sound healer guiding you home to your body."
+>
+	<section class="page-hero section">
+		<div class="wrap wrap--narrow">
+			<p class="eyebrow">About</p>
+			<h1>My story</h1>
+		</div>
+	</section>
+
+	<section class="section about-body">
+		<div class="wrap about-grid">
+			<figure class="about-portrait reveal">
+				<img
+					src="/images/Rachel_Flowers.webp"
+					alt="Rachel Flower"
+					width="800"
+					height="1000"
+					loading="eager"
+				/>
+			</figure>
+			<div class="about-copy reveal reveal-delay-1">
+				<p>I am Rachel. I’ve walked through fire and emerged holding flowers.</p>
+				<p>
+					Stage 4 cancer became one of my greatest teachers. It stripped life down to what was
+					essential and invited me into radical aliveness. My healing journey did not make me
+					perfect or fearless. It made me honest. It taught me that every breath is a doorway, every
+					sensation a message, every moment a chance to remember who we really are.
+				</p>
+				<p>Now I guide others through the sacred doorways of their own becoming.</p>
+				<p>
+					Here, we do not rush to fix what is not broken. We listen. We honor the wisdom already
+					living in your body and nervous system. We remember what was never truly lost.
+				</p>
+				<p>
+					Through breath, sound, and somatic presence, I hold a field where your system can settle,
+					unwind, and reorganize around deeper truth. This is presence meeting presence. Soul
+					recognizing soul. You are not a problem to solve — you are a living, breathing process to
+					be met with care.
+				</p>
+				<p>
+					I am a somatic practitioner, breathwork facilitator, sound healer, and trauma-informed
+					plant medicine guide. With decades of somatic training and more than twelve years of
+					apprenticeship and study with pioneers in the plant medicine world, I bring together
+					nervous system science, deep ritual, and gentle, grounded spirituality.
+				</p>
+				<p>
+					My work is simple at its core: I help you come home to your body, trust your own knowing,
+					and breathe life back into the parts of you that are ready to blossom.
+				</p>
+				<p class="about-cta">
+					<a class="btn btn--primary" href="/offerings">View offerings</a>
+				</p>
+			</div>
+		</div>
+	</section>
+</BaseLayout>
+
+<style>
+	.page-hero {
+		padding-bottom: var(--space-md);
+	}
+
+	.page-hero h1 {
+		margin: 0;
+	}
+
+	.about-grid {
+		display: grid;
+		gap: var(--space-lg);
+		align-items: start;
+	}
+
+	@media (min-width: 860px) {
+		.about-grid {
+			grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+			gap: var(--space-xl);
+		}
+	}
+
+	.about-portrait {
+		margin: 0;
+	}
+
+	.about-portrait img {
+		width: 100%;
+		aspect-ratio: 4 / 5;
+		object-fit: cover;
+	}
+
+	.about-copy p {
+		color: var(--color-ink-soft);
+		font-size: 1.05rem;
+	}
+
+	.about-cta {
+		margin-top: var(--space-md);
+	}
+</style>

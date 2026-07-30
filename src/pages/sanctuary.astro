@@ -1,0 +1,103 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+	title="Sanctuary"
+	description="One Tree Cottage — a sanctuary for workshops and retreats in North Lake Tahoe."
+>
+	<section class="page-hero section">
+		<div class="wrap wrap--narrow">
+			<p class="eyebrow">Sanctuary</p>
+			<h1>One Tree Cottage</h1>
+			<p class="lede italic-accent">Sanctuary for the soul</p>
+			<p class="lede">
+				We hold regular workshops and retreats at our home away from home — a quiet container for
+				breath, sound, and gathering.
+			</p>
+		</div>
+	</section>
+
+	<section class="section gallery">
+		<div class="wrap">
+			<div class="gallery-grid">
+				<img
+					class="reveal"
+					src="/images/sanctuary-1.webp"
+					alt="One Tree Cottage sanctuary space"
+					width="900"
+					height="700"
+					loading="eager"
+				/>
+				<img
+					class="reveal reveal-delay-1"
+					src="/images/sanctuary-2.webp"
+					alt="Sanctuary interior detail"
+					width="900"
+					height="700"
+					loading="lazy"
+				/>
+				<img
+					class="reveal reveal-delay-2"
+					src="/images/sanctuary-3.webp"
+					alt="Gathering space at One Tree Cottage"
+					width="900"
+					height="700"
+					loading="lazy"
+				/>
+			</div>
+		</div>
+	</section>
+
+	<section class="section inquire">
+		<div class="wrap wrap--narrow reveal">
+			<h2>Need a space for your own workshop or retreat?</h2>
+			<p class="lede">Let’s talk.</p>
+			<p>
+				<a class="btn btn--primary" href="/contact">Inquire about the sanctuary →</a>
+			</p>
+		</div>
+	</section>
+</BaseLayout>
+
+<style>
+	.page-hero h1 {
+		margin: 0 0 0.5rem;
+	}
+
+	.gallery {
+		padding-top: 0;
+	}
+
+	.gallery-grid {
+		display: grid;
+		gap: 1rem;
+	}
+
+	@media (min-width: 720px) {
+		.gallery-grid {
+			grid-template-columns: repeat(3, 1fr);
+			gap: 1.25rem;
+		}
+	}
+
+	.gallery-grid img {
+		width: 100%;
+		aspect-ratio: 4 / 5;
+		object-fit: cover;
+	}
+
+	.inquire {
+		text-align: center;
+		background: rgba(255, 255, 255, 0.4);
+	}
+
+	.inquire h2 {
+		margin: 0 0 0.75rem;
+	}
+
+	.inquire .lede {
+		margin-inline: auto;
+		margin-bottom: 1.5rem;
+	}
+</style>

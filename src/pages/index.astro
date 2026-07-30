@@ -1,18 +1,338 @@
 ---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { site } from '../config/site';
+import { getHomeOfferings } from '../lib/content/offerings';
+import { formatEventDate, getEvents, upcomingFrom } from '../lib/content/events';
 
+const homeOfferings = await getHomeOfferings();
+const featured = upcomingFrom(await getEvents(), new Date(), 3);
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Soul Flower Somatics</title>
-	</head>
-	<body>
-		<h1>Soul Flower Somatics</h1>
-		<p>Site foundation — Astro on Cloudflare Pages.</p>
-	</body>
-</html>
+<BaseLayout
+	transparentNav
+	title={site.name}
+	description="Something brought you here. Restoration, resonance, and deep remembering through breath, sound, and somatic presence."
+>
+	<section class="hero" aria-label="Welcome">
+		<video
+			class="hero__video"
+			autoplay
+			muted
+			loop
+			playsinline
+			poster="/videos/hero-poster.jpg"
+			aria-hidden="true"
+		>
+			<source src="/videos/SoulFlowerSomatics_Banner1.mp4" type="video/mp4" />
+		</video>
+		<div class="hero__veil" aria-hidden="true"></div>
+		<div class="hero__content wrap">
+			<img
+				class="hero__logo"
+				src="/images/SoulFlowerSomatics_HorizontalLogoBlack.webp"
+				alt="Soul Flower Somatics"
+				width="420"
+				height="90"
+			/>
+			<h1 class="hero__headline">Remember why you came here.</h1>
+			<p class="hero__support">
+				Restoration, resonance, and deep remembering — already alive in your body.
+			</p>
+			<div class="hero__actions">
+				<a class="btn btn--ghost" href="/gatherings">Begin your journey →</a>
+			</div>
+		</div>
+	</section>
+
+	<section class="section intro">
+		<div class="wrap wrap--narrow reveal">
+			<h2 class="sr-only">The Flower State</h2>
+			<p>Something brought you here.</p>
+			<p>Maybe it was a longing you couldn’t name.</p>
+			<p>Maybe it was exhaustion with who you’ve been pretending to be.</p>
+			<p>
+				Maybe it was the quiet knowing that your body holds something your mind hasn’t caught up to
+				yet.
+			</p>
+			<p>
+				Whatever it was — you were right to follow it. What you’re moving toward has a name. I call
+				it the <em>Flower State</em> — your body’s natural condition of aliveness, already present,
+				waiting to be remembered.
+			</p>
+		</div>
+	</section>
+
+	<section class="section offerings-teaser">
+		<div class="wrap">
+			<div class="section-head reveal">
+				<p class="eyebrow">Offerings</p>
+				<h2>Paths home to yourself</h2>
+			</div>
+			<ul class="offering-list">
+				{
+					homeOfferings.map((offering, i) => (
+						<li class:list={['reveal', `reveal-delay-${Math.min(i, 2)}`]}>
+							<a href={`/offerings#${offering.slug}`}>
+								<h3>{offering.title}</h3>
+								<p>{offering.teaser}</p>
+							</a>
+						</li>
+					))
+				}
+			</ul>
+			<p class="section-cta reveal">
+				<a class="btn btn--outline" href="/offerings">Learn more →</a>
+			</p>
+		</div>
+	</section>
+
+	<section class="section gatherings-teaser">
+		<div class="wrap">
+			<div class="section-head reveal">
+				<p class="eyebrow">Upcoming gatherings</p>
+				<h2>Where souls meet to remember together</h2>
+				<p class="lede italic-accent">
+					Step outside time. Circle with kindred spirits. Breathe, move, sound, and awaken in
+					community.
+				</p>
+			</div>
+			{
+				featured.length > 0 ? (
+					<ul class="event-list">
+						{featured.map((event, i) => (
+							<li class:list={['event-card', 'reveal', `reveal-delay-${Math.min(i, 2)}`]}>
+								{event.image && (
+									<img src={event.image} alt="" width="640" height="400" loading="lazy" />
+								)}
+								<div>
+									<p class="event-card__date">{formatEventDate(event.date)}</p>
+									<h3>{event.title}</h3>
+									<p class="event-card__meta">
+										{event.time}
+										{event.time && event.venue ? ' · ' : ''}
+										{event.venue}
+									</p>
+									{event.summary && <p>{event.summary}</p>}
+									<a href={`/gatherings#${event.slug}`}>View gathering →</a>
+								</div>
+							</li>
+						))}
+					</ul>
+				) : (
+					<p class="reveal">New gatherings are being planned. Join the list to hear first.</p>
+				)
+			}
+			<p class="section-cta reveal">
+				<a class="btn btn--primary" href="/gatherings">See full calendar</a>
+			</p>
+		</div>
+	</section>
+
+	<section class="section newsletter" id="newsletter">
+		<div class="wrap wrap--narrow reveal">
+			<h2>Stay connected</h2>
+			<p class="lede">Sign up to receive event notifications and updates.</p>
+			<p class="newsletter__note">
+				Newsletter signup (MailerLite) will connect here next — for now,
+				<a href="/contact">reach out</a> and I’ll keep you in the loop.
+			</p>
+		</div>
+	</section>
+</BaseLayout>
+
+<style>
+	.hero {
+		position: relative;
+		min-height: 100svh;
+		display: grid;
+		align-items: end;
+		color: var(--color-white);
+		overflow: hidden;
+	}
+
+	.hero__video {
+		position: absolute;
+		inset: 0;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		z-index: 0;
+	}
+
+	.hero__veil {
+		position: absolute;
+		inset: 0;
+		z-index: 1;
+		background:
+			linear-gradient(180deg, rgba(18, 28, 24, 0.35) 0%, rgba(18, 28, 24, 0.15) 40%, rgba(18, 28, 24, 0.72) 100%);
+	}
+
+	.hero__content {
+		position: relative;
+		z-index: 2;
+		padding-block: calc(var(--nav-height) + 2rem) 4.5rem;
+		animation: hero-rise 1.1s var(--ease-out) both;
+	}
+
+	.hero__logo {
+		width: min(100%, 22rem);
+		height: auto;
+		margin-bottom: 1.5rem;
+		filter: brightness(0) invert(1);
+	}
+
+	.hero__headline {
+		color: var(--color-white);
+		max-width: 14ch;
+		margin: 0 0 1rem;
+	}
+
+	.hero__support {
+		max-width: 32rem;
+		font-size: 1.125rem;
+		line-height: 1.55;
+		color: rgba(255, 255, 255, 0.88);
+		margin: 0 0 1.75rem;
+	}
+
+	.intro p {
+		font-size: clamp(1.15rem, 2.2vw, 1.4rem);
+		line-height: 1.7;
+		color: var(--color-ink-soft);
+	}
+
+	.intro em {
+		font-family: var(--font-display);
+		font-style: italic;
+		color: var(--color-sage-deep);
+	}
+
+	.section-head {
+		margin-bottom: var(--space-lg);
+		max-width: 40rem;
+	}
+
+	.section-head h2 {
+		margin: 0 0 0.75rem;
+	}
+
+	.section-cta {
+		margin-top: var(--space-lg);
+	}
+
+	.offering-list {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: grid;
+		gap: 0;
+		border-top: 1px solid rgba(47, 74, 64, 0.15);
+	}
+
+	.offering-list li {
+		border-bottom: 1px solid rgba(47, 74, 64, 0.15);
+	}
+
+	.offering-list a {
+		display: grid;
+		gap: 0.35rem;
+		padding-block: 1.35rem;
+		text-decoration: none;
+		color: inherit;
+	}
+
+	.offering-list a:hover h3 {
+		color: var(--color-sage-deep);
+	}
+
+	.offering-list h3 {
+		margin: 0;
+	}
+
+	.offering-list p {
+		margin: 0;
+		color: var(--color-ink-soft);
+		max-width: 36rem;
+	}
+
+	.gatherings-teaser {
+		background: rgba(255, 255, 255, 0.45);
+	}
+
+	.event-list {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: grid;
+		gap: var(--space-lg);
+	}
+
+	.event-card {
+		display: grid;
+		gap: 1.25rem;
+		align-items: start;
+	}
+
+	@media (min-width: 720px) {
+		.event-card {
+			grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+			gap: 2rem;
+		}
+	}
+
+	.event-card img {
+		width: 100%;
+		aspect-ratio: 4 / 3;
+		object-fit: cover;
+	}
+
+	.event-card h3 {
+		margin: 0.25rem 0 0.5rem;
+	}
+
+	.event-card__date {
+		margin: 0;
+		font-size: 0.85rem;
+		font-weight: 600;
+		letter-spacing: 0.04em;
+		text-transform: uppercase;
+		color: var(--color-sage-deep);
+	}
+
+	.event-card__meta {
+		margin: 0 0 0.75rem;
+		color: var(--color-ink-soft);
+		font-size: 0.95rem;
+	}
+
+	.newsletter {
+		text-align: center;
+	}
+
+	.newsletter .lede {
+		margin-inline: auto;
+	}
+
+	.newsletter__note {
+		margin-top: 1rem;
+		font-size: 0.95rem;
+		color: var(--color-ink-soft);
+	}
+
+	@keyframes hero-rise {
+		from {
+			opacity: 0;
+			transform: translateY(1.5rem);
+		}
+		to {
+			opacity: 1;
+			transform: none;
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.hero__content {
+			animation: none;
+		}
+	}
+</style>

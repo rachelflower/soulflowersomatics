@@ -5,16 +5,21 @@
   "engines": {
     "node": ">=22.12.0"
   },
-  "scripts": {
-    "dev": "astro dev",
-    "build": "astro build",
-    "preview": "astro preview",
-    "astro": "astro",
-    "generate-types": "wrangler types"
-  },
-  "dependencies": {
-    "@astrojs/cloudflare": "^14.1.7",
-    "astro": "^7.1.6",
-    "wrangler": "^4.116.0"
-  }
+	"scripts": {
+		"dev": "astro dev",
+		"cms": "decap-server",
+		"build": "astro build",
+		"preview": "astro preview",
+		"astro": "astro",
+		"generate-types": "wrangler types"
+	},
+	"dependencies": {
+		"@astrojs/cloudflare": "^14.1.7",
+		"astro": "^7.1.6",
+		"resend": "^6.18.1",
+		"wrangler": "^4.116.0"
+	},
+	"devDependencies": {
+		"decap-server": "^3.2.0"
+	}
 }

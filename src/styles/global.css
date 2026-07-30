@@ -1,0 +1,245 @@
+:root {
+	/* Brand — soft somatic, sage & ink (not purple / cream-terracotta defaults) */
+	--color-ink: #1a2420;
+	--color-ink-soft: #3d4a44;
+	--color-mist: #e8eee9;
+	--color-paper: #f4f7f5;
+	--color-sage: #89b7a8;
+	--color-sage-deep: #5a8f7e;
+	--color-moss: #2f4a40;
+	--color-bloom: #c4a484;
+	--color-white: #ffffff;
+
+	--font-display: "Libre Baskerville", "Iowan Old Style", Georgia, serif;
+	--font-body: "Open Sans", "Segoe UI", sans-serif;
+
+	--space-xs: 0.5rem;
+	--space-sm: 1rem;
+	--space-md: 1.75rem;
+	--space-lg: 3rem;
+	--space-xl: 5rem;
+	--space-2xl: 8rem;
+
+	--measure: 38rem;
+	--measure-wide: 64rem;
+	--nav-height: 4.5rem;
+
+	--ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+}
+
+html {
+	scroll-behavior: smooth;
+}
+
+body {
+	margin: 0;
+	font-family: var(--font-body);
+	font-size: 1.0625rem;
+	line-height: 1.65;
+	color: var(--color-ink);
+	background:
+		radial-gradient(ellipse 120% 80% at 10% -10%, rgba(137, 183, 168, 0.22), transparent 55%),
+		radial-gradient(ellipse 90% 60% at 100% 0%, rgba(196, 164, 132, 0.12), transparent 50%),
+		linear-gradient(180deg, var(--color-paper) 0%, var(--color-mist) 100%);
+	background-attachment: fixed;
+	min-height: 100vh;
+	-webkit-font-smoothing: antialiased;
+}
+
+img,
+video {
+	max-width: 100%;
+	display: block;
+}
+
+a {
+	color: var(--color-sage-deep);
+	text-decoration-thickness: 1px;
+	text-underline-offset: 0.2em;
+	transition: color 0.2s var(--ease-out);
+}
+
+a:hover {
+	color: var(--color-moss);
+}
+
+h1,
+h2,
+h3 {
+	font-family: var(--font-display);
+	font-weight: 400;
+	line-height: 1.25;
+	color: var(--color-ink);
+}
+
+h1 {
+	font-size: clamp(2.25rem, 5vw, 3.75rem);
+	letter-spacing: -0.02em;
+}
+
+h2 {
+	font-size: clamp(1.75rem, 3.5vw, 2.5rem);
+}
+
+h3 {
+	font-size: clamp(1.25rem, 2vw, 1.5rem);
+}
+
+p {
+	margin: 0 0 1em;
+}
+
+p:last-child {
+	margin-bottom: 0;
+}
+
+.sr-only {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	padding: 0;
+	margin: -1px;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	white-space: nowrap;
+	border: 0;
+}
+
+.wrap {
+	width: min(100% - 2.5rem, var(--measure-wide));
+	margin-inline: auto;
+}
+
+.wrap--narrow {
+	width: min(100% - 2.5rem, var(--measure));
+}
+
+.section {
+	padding-block: var(--space-xl);
+}
+
+.section--tight {
+	padding-block: var(--space-lg);
+}
+
+.eyebrow {
+	font-family: var(--font-body);
+	font-size: 0.8rem;
+	font-weight: 600;
+	letter-spacing: 0.14em;
+	text-transform: uppercase;
+	color: var(--color-sage-deep);
+	margin: 0 0 var(--space-sm);
+}
+
+.lede {
+	font-size: 1.15rem;
+	color: var(--color-ink-soft);
+	max-width: var(--measure);
+}
+
+.italic-accent {
+	font-family: var(--font-display);
+	font-style: italic;
+	color: var(--color-sage-deep);
+}
+
+.btn {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.5rem;
+	padding: 0.85rem 1.5rem;
+	font-family: var(--font-body);
+	font-size: 0.95rem;
+	font-weight: 600;
+	letter-spacing: 0.02em;
+	text-decoration: none;
+	border: 1.5px solid transparent;
+	cursor: pointer;
+	transition:
+		background 0.25s var(--ease-out),
+		color 0.25s var(--ease-out),
+		border-color 0.25s var(--ease-out),
+		transform 0.25s var(--ease-out);
+}
+
+.btn:hover {
+	transform: translateY(-1px);
+}
+
+.btn--primary {
+	background: var(--color-moss);
+	color: var(--color-white);
+}
+
+.btn--primary:hover {
+	background: var(--color-ink);
+	color: var(--color-white);
+}
+
+.btn--ghost {
+	background: transparent;
+	color: var(--color-white);
+	border-color: rgba(255, 255, 255, 0.55);
+}
+
+.btn--ghost:hover {
+	background: rgba(255, 255, 255, 0.12);
+	color: var(--color-white);
+	border-color: var(--color-white);
+}
+
+.btn--outline {
+	background: transparent;
+	color: var(--color-moss);
+	border-color: var(--color-sage);
+}
+
+.btn--outline:hover {
+	background: var(--color-sage);
+	color: var(--color-ink);
+}
+
+/* Scroll reveal */
+.reveal {
+	opacity: 0;
+	transform: translateY(1.25rem);
+	transition:
+		opacity 0.8s var(--ease-out),
+		transform 0.8s var(--ease-out);
+}
+
+.reveal.is-visible {
+	opacity: 1;
+	transform: none;
+}
+
+.reveal-delay-1 {
+	transition-delay: 0.12s;
+}
+
+.reveal-delay-2 {
+	transition-delay: 0.24s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	html {
+		scroll-behavior: auto;
+	}
+
+	.reveal {
+		opacity: 1;
+		transform: none;
+		transition: none;
+	}
+
+	.btn:hover {
+		transform: none;
+	}
+}

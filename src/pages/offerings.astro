@@ -1,0 +1,80 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getOfferings } from '../lib/content/offerings';
+
+const offerings = await getOfferings();
+---
+
+<BaseLayout
+	title="Offerings"
+	description="Somatic coaching, Sohum Breathing, sound healing, resonant branding, and psychedelic somatic integration."
+>
+	<section class="page-hero section">
+		<div class="wrap wrap--narrow">
+			<p class="eyebrow">Offerings</p>
+			<h1>Come home to yourself</h1>
+			<p class="lede">
+				Every offering is an invitation to come home to yourself. Whether through the breath, the
+				body, or the resonance of your soul’s voice, each path opens a door into greater aliveness.
+			</p>
+		</div>
+	</section>
+
+	<section class="section offerings">
+		<div class="wrap">
+			{
+				offerings.map((offering, i) => (
+					<article
+						id={offering.slug}
+						class:list={['offering', 'reveal', i % 2 === 1 ? 'reveal-delay-1' : undefined]}
+					>
+						<h2>{offering.title}</h2>
+						<p>{offering.body}</p>
+					</article>
+				))
+			}
+
+			<div class="book reveal">
+				<a class="btn btn--primary" href="/contact">Get in touch to book a session →</a>
+			</div>
+		</div>
+	</section>
+</BaseLayout>
+
+<style>
+	.page-hero {
+		padding-bottom: var(--space-md);
+	}
+
+	.page-hero h1 {
+		margin: 0 0 1rem;
+	}
+
+	.offerings {
+		padding-top: 0;
+	}
+
+	.offering {
+		padding-block: var(--space-lg);
+		border-top: 1px solid rgba(47, 74, 64, 0.14);
+		max-width: 42rem;
+	}
+
+	.offering:last-of-type {
+		border-bottom: 1px solid rgba(47, 74, 64, 0.14);
+	}
+
+	.offering h2 {
+		margin: 0 0 0.75rem;
+	}
+
+	.offering p {
+		margin: 0;
+		color: var(--color-ink-soft);
+		font-size: 1.05rem;
+	}
+
+	.book {
+		margin-top: var(--space-xl);
+	}
+</style>
