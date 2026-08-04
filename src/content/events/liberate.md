@@ -1,10 +1,10 @@
 ---
-title: Resonance
-date: "2026-07-19"
-time: "6:00–8:00 PM"
+title: Liberate
+date: "2026-07-05"
+time: "8:30 AM"
 venue: One Tree Cottage
-image: /images/Breathwork_Resonance.webp
-summary: Conscious connected breathing woven with immersive soundscapes.
+image: /images/Breathwork_Liberate.webp
+summary: Join me for breathwork and soundscape. Sliding scale $30–$45.
 registrationUrl: https://pci.jotform.com/form/261449387338166
 registrationLabel: Reserve your spot
 ---

@@ -1,6 +1,6 @@
 ---
-title: "Somadance, Sacrament & Sound"
-date: "2026-08-05"
+title: "Somadance, Sacrament & Sound — Harmonic"
+date: "2026-04-29"
 time: "6:00–9:30 PM"
 venue: One Tree Cottage
 image: /images/Somadance_Sacrament_and_Sound_1.webp

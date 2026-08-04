@@ -1,10 +1,9 @@
 ---
-title: Resonance
-date: "2026-07-19"
-time: "6:00–8:00 PM"
+title: Sanctuary
+date: "2026-07-13"
+time: "5:00–7:00 PM"
 venue: One Tree Cottage
-image: /images/Breathwork_Resonance.webp
-summary: Conscious connected breathing woven with immersive soundscapes.
+summary: Sacred breathwork woven with immersive soundscapes.
 registrationUrl: https://pci.jotform.com/form/261449387338166
 registrationLabel: Reserve your spot
 ---

@@ -8,6 +8,8 @@ export type EventItem = {
 	venue: string;
 	image?: string;
 	summary?: string;
+	registrationUrl?: string;
+	registrationLabel?: string;
 };
 
 export function toEventItem(entry: CollectionEntry<'events'>): EventItem {
@@ -19,6 +21,8 @@ export function toEventItem(entry: CollectionEntry<'events'>): EventItem {
 		venue: entry.data.venue,
 		image: entry.data.image,
 		summary: entry.data.summary,
+		registrationUrl: entry.data.registrationUrl,
+		registrationLabel: entry.data.registrationLabel,
 	};
 }
 

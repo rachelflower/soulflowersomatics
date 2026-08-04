@@ -1,16 +1,21 @@
 ---
+import { getCollection, render } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { formatEventDate, getEvents } from '../../lib/content/events';
+import { formatEventDate, toEventItem } from '../../lib/content/events';
 
 export async function getStaticPaths() {
-	const events = await getEvents();
-	return events.map((event) => ({
-		params: { slug: event.slug },
-		props: { event },
+	const entries = await getCollection('events');
+	return entries.map((entry) => ({
+		params: { slug: entry.id },
+		props: { entry },
 	}));
 }
 
-const { event } = Astro.props;
+const { entry } = Astro.props;
+const event = toEventItem(entry);
+const { Content } = await render(entry);
+const registerLabel = event.registrationLabel ?? 'Reserve your spot';
+const hasBody = Boolean(entry.body?.trim());
 ---
 
 <BaseLayout
@@ -34,37 +39,43 @@ const { event } = Astro.props;
 				)
 			}
 			{event.summary && <p class="summary">{event.summary}</p>}
+			{hasBody && (
+				<div class="body">
+					<Content />
+				</div>
+			)}
 
-			<form class="register" id="register-form" data-event-title={event.title} data-event-slug={event.slug}>
-				<h2>Register by email</h2>
-				<p class="lede">
-					Send your details and I’ll follow up with confirmation and prep notes. No payment on this
-					site yet.
-				</p>
-				<label>
-					Name
-					<input name="name" type="text" required maxlength="120" autocomplete="name" />
-				</label>
-				<label>
-					Email
-					<input name="email" type="email" required maxlength="254" autocomplete="email" />
-				</label>
-				<label>
-					Guests
-					<input name="guests" type="number" min="1" max="20" value="1" />
-				</label>
-				<label>
-					Notes <span class="optional">(optional)</span>
-					<textarea name="notes" rows="4" maxlength="2000"></textarea>
-				</label>
-				{/* honeypot */}
-				<label class="hp" aria-hidden="true">
-					Website
-					<input name="website" type="text" tabindex="-1" autocomplete="off" />
-				</label>
-				<button class="btn btn--primary" type="submit">Request a spot</button>
-				<p class="form-status" role="status" aria-live="polite" hidden></p>
-			</form>
+			<div class="register">
+				{
+					event.registrationUrl ? (
+						<>
+							<h2>Registration</h2>
+							<p class="lede">Reserve your spot through the secure registration form.</p>
+							<a
+								class="btn btn--primary"
+								href={event.registrationUrl}
+								target="_blank"
+								rel="noopener noreferrer"
+							>
+								{registerLabel}
+							</a>
+						</>
+					) : (
+						<>
+							<h2>Reserve a spot</h2>
+							<p class="lede">
+								Registration for this gathering is by text or email. Reach out and I’ll confirm
+								details with you.
+							</p>
+							<p class="contact-line">
+								<a href="sms:+14158272623">Text 415-827-2623</a>
+								{' · '}
+								<a href="/contact">Contact</a>
+							</p>
+						</>
+					)
+				}
+			</div>
 		</div>
 	</section>
 </BaseLayout>
@@ -93,7 +104,22 @@ const { event } = Astro.props;
 	.summary {
 		font-size: 1.1rem;
 		color: var(--color-ink-soft);
+		margin-bottom: 1.25rem;
+	}
+
+	.body {
+		color: var(--color-ink-soft);
+		line-height: 1.65;
 		margin-bottom: 2rem;
+	}
+
+	.body :global(p) {
+		margin: 0 0 1rem;
+	}
+
+	.body :global(ul) {
+		margin: 0 0 1rem;
+		padding-left: 1.25rem;
 	}
 
 	.register {
@@ -101,103 +127,23 @@ const { event } = Astro.props;
 		gap: 1rem;
 		padding-top: var(--space-lg);
 		border-top: 1px solid rgba(47, 74, 64, 0.12);
+		justify-items: start;
 	}
 
 	.register h2 {
 		margin: 0;
 	}
 
-	.register label {
-		display: grid;
-		gap: 0.35rem;
-		font-weight: 600;
-		font-size: 0.9rem;
-	}
-
-	.optional {
-		font-weight: 400;
+	.lede {
+		margin: 0;
 		color: var(--color-ink-soft);
 	}
 
-	.register input,
-	.register textarea {
-		font: inherit;
-		font-weight: 400;
-		padding: 0.75rem 0.85rem;
-		border: 1px solid rgba(47, 74, 64, 0.25);
-		background: rgba(255, 255, 255, 0.7);
-		color: var(--color-ink);
-	}
-
-	.register input:focus,
-	.register textarea:focus {
-		outline: 2px solid var(--color-sage);
-		outline-offset: 1px;
-	}
-
-	.hp {
-		position: absolute;
-		left: -9999px;
-		opacity: 0;
-		height: 0;
-		overflow: hidden;
-	}
-
-	.form-status {
+	.contact-line {
 		margin: 0;
+	}
+
+	.contact-line a {
 		font-weight: 600;
 	}
-
-	.form-status[data-state='ok'] {
-		color: var(--color-sage-deep);
-	}
-
-	.form-status[data-state='error'] {
-		color: #8a3a2a;
-	}
 </style>
-
-<script>
-	const form = document.getElementById('register-form') as HTMLFormElement | null;
-	const status = form?.querySelector('.form-status') as HTMLElement | null;
-
-	form?.addEventListener('submit', async (event) => {
-		event.preventDefault();
-		if (!form || !status) return;
-
-		const data = new FormData(form);
-		const payload = {
-			name: String(data.get('name') ?? ''),
-			email: String(data.get('email') ?? ''),
-			guests: Number(data.get('guests') ?? 1),
-			notes: String(data.get('notes') ?? ''),
-			website: String(data.get('website') ?? ''),
-			eventTitle: form.dataset.eventTitle ?? '',
-			eventSlug: form.dataset.eventSlug ?? '',
-		};
-
-		status.hidden = false;
-		status.dataset.state = '';
-		status.textContent = 'Sending…';
-
-		try {
-			const res = await fetch('/api/register', {
-				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify(payload),
-			});
-			const json = (await res.json()) as { ok?: boolean; error?: string };
-			if (!res.ok || !json.ok) {
-				status.dataset.state = 'error';
-				status.textContent = json.error ?? 'Something went wrong. Please try again.';
-				return;
-			}
-			status.dataset.state = 'ok';
-			status.textContent = 'Thank you — I’ll be in touch soon.';
-			form.reset();
-		} catch {
-			status.dataset.state = 'error';
-			status.textContent = 'Unable to send right now. Please try again later.';
-		}
-	});
-</script>

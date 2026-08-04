@@ -51,7 +51,7 @@ const past = events
 									</p>
 									{event.summary && <p>{event.summary}</p>}
 									<a class="btn btn--outline" href={`/gatherings/${event.slug}`}>
-										Register by email →
+										{event.registrationUrl ? 'Reserve your spot →' : 'View gathering →'}
 									</a>
 								</div>
 							</li>

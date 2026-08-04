@@ -18,6 +18,9 @@ const events = defineCollection({
 		venue: z.string(),
 		image: z.string().optional(),
 		summary: z.string().optional(),
+		/** External registration (Jotform, Google Form, etc.) */
+		registrationUrl: z.string().url().optional(),
+		registrationLabel: z.string().optional(),
 	}),
 });
 

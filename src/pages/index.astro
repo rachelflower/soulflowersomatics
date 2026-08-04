@@ -123,7 +123,7 @@ const featured = upcomingFrom(await getEvents(), new Date(), 3);
 							<li class:list={['event-card', 'reveal', `reveal-delay-${Math.min(i, 2)}`]}>
 								{event.image && (
 									<a href={`/gatherings/${event.slug}`} class="event-card__media">
-										<img src={event.image} alt="" width="720" height="900" loading="lazy" />
+										<img src={event.image} alt="" loading="lazy" />
 									</a>
 								)}
 								<div class="event-card__body">
@@ -354,9 +354,26 @@ const featured = upcomingFrom(await getEvents(), new Date(), 3);
 
 	.event-card img {
 		width: 100%;
-		aspect-ratio: 4 / 5;
-		object-fit: cover;
+		height: auto;
 		transition: transform 0.8s var(--ease-out);
+	}
+
+	@media (max-width: 799px) {
+		.event-list {
+			gap: var(--space-lg);
+		}
+
+		.event-card {
+			gap: 1rem;
+		}
+
+		.event-card img {
+			width: auto;
+			max-width: 100%;
+			max-height: 14rem;
+			height: auto;
+			margin-inline: auto;
+		}
 	}
 
 	.event-card__media:hover img {

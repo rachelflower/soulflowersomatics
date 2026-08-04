@@ -1,12 +1,10 @@
 ---
-title: Resonance
-date: "2026-07-19"
-time: "6:00–8:00 PM"
+title: Rebalance
+date: "2026-03-22"
+time: "9:00–11:00 AM"
 venue: One Tree Cottage
-image: /images/Breathwork_Resonance.webp
-summary: Conscious connected breathing woven with immersive soundscapes.
-registrationUrl: https://pci.jotform.com/form/261449387338166
-registrationLabel: Reserve your spot
+image: /images/Breathwork_Rebalance.webp
+summary: "Sacred breathwork woven with immersive soundscapes — restore balance, awaken vitality, and open the heart."
 ---
 
 These aren’t just breathwork sessions — they are sacred journeys designed to restore balance, awaken vitality, and open the heart.
